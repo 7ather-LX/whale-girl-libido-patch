@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>鲸鲸 · 生理状态</title>
+<link rel="stylesheet" href="/libido-patch/style.css">
+</head>
+<body>
+<main>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">WHALE GIRL · 18+</p>
+      <h1>生理状态</h1>
+      <p class="muted">状态会随时间、睡眠和事件变化，并注入鲸鲸的人设提示词。只在本机面板调整。</p>
+    </div>
+    <label class="switch"><input id="enabled" type="checkbox"> 启用补丁</label>
+  </header>
+
+  <section class="cards">
+    <div class="card big">
+      <div class="value-row"><span id="value">18</span><small>/100</small></div>
+      <div id="tier" class="tier">平静</div>
+      <div class="bar"><div id="barFill"></div></div>
+      <div class="meta">
+        <span id="season">距下次发情期 1 天</span>
+        <span id="updated">—</span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>时间规则</h2>
+      <p class="muted">醒着每 2 小时 +1；跨夜睡一觉砍半，不低于 10；每月 18–20 日发情期涨速翻倍、档位门槛降低。</p>
+      <div class="row">
+        <button id="sleep" class="ghost">睡醒（砍半）</button>
+        <button id="done" class="ghost">解决（归 10）</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="row between">
+      <h2>近 72 小时</h2>
+      <span id="checkInText" class="muted"></span>
+    </div>
+    <canvas id="chart" width="900" height="240"></canvas>
+  </section>
+
+  <section class="grid2">
+    <div class="card">
+      <h2>事件</h2>
+      <p class="muted">点按钮直接改数值；也可以输入自定义增减。</p>
+      <div id="eventButtons" class="chips"></div>
+      <div class="row tight">
+        <input id="note" placeholder="备注，如：摸尾巴" maxlength="80">
+        <button id="addEvent" class="primary">记一笔</button>
+      </div>
+      <div id="events" class="events"></div>
+    </div>
+
+    <div class="card">
+      <h2>近况</h2>
+      <form id="checkForm">
+        <label class="field">心情<input id="mood" maxlength="40" placeholder="今天心情"></label>
+        <label class="field">陪伴<input id="company" maxlength="40" placeholder="和谁 / 在哪"></label>
+        <label class="field">备注<textarea id="checkNote" rows="3" maxlength="200" placeholder="写一点近况"></textarea></label>
+        <button class="primary" type="submit">保存近况</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="row between">
+      <div>
+        <h2>注入设置</h2>
+        <p class="muted">只注入语气和主动性，不向对方播报数值。成人角色限定；不涉及未成年、非自愿、暴力。</p>
+      </div>
+      <label class="switch"><input id="inject" type="checkbox"> 注入人设提示词</label>
+    </div>
+    <label class="switch" style="margin-top:6px"><input id="injectGroups" type="checkbox"> 群聊也注入（默认只私聊）</label>
+    <div class="row">
+      <button id="saveConfig" class="primary">保存设置</button>
+      <button id="reset" class="danger">重新立账（回到 18）</button>
+      <span id="saveInfo" class="muted"></span>
+    </div>
+  </section>
+
+  <p class="foot">灵感来源：<a href="https://github.com/amtoki520/dsh-libido-panel" target="_blank" rel="noreferrer">amtoki520/dsh-libido-panel</a>（DSH 面板）。本补丁是鲸鲸的独立实现，不包含原项目代码。仅限成年人自行使用。</p>
+</main>
+<script src="/libido-patch/app.js"></script>
+</body>
+</html>
