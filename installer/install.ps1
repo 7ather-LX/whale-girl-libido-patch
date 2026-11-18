@@ -84,18 +84,20 @@ if ($version -and $version -ne "4.1.2") {
   Write-Host "  [WARN] tested with 4.1.2; continuing anyway." -ForegroundColor Yellow
 }
 
-Step "1/5 Check package"
+Step "1/6 Check package"
 $patchSrc = Join-Path (Split-Path -Parent $here) "patch"
+$launcherSrcDir = Join-Path (Split-Path -Parent $here) "launcher\files"
 if (-not (Test-Path (Join-Path $patchSrc "index.js"))) { Fail "package incomplete: patch/index.js missing" }
+if (-not (Test-Path (Join-Path $launcherSrcDir "WhaleLauncher.exe"))) { Fail "package incomplete: launcher/files missing" }
 Info "package OK"
 
-Step "2/5 Copy patch"
+Step "2/6 Copy patch"
 $dest = Join-Path $AppRoot "whale-libido-patch"
 if (Test-Path $dest) { Remove-Item $dest -Recurse -Force }
 Copy-Item $patchSrc $dest -Recurse
 Info "copied to $dest"
 
-Step "3/5 Add server.js hook"
+Step "3/6 Add server.js hook"
 $serverPath = Join-Path $AppRoot "server.js"
 $backup = Join-Path $AppRoot "server.js.whale-libido-patch.bak"
 $hook = "require('./whale-libido-patch').install();"
@@ -110,7 +112,7 @@ if ($server -notmatch 'whale-libido-patch') {
   Info "hook already present"
 }
 
-Step "4/5 Syntax check"
+Step "4/6 Syntax check"
 $node = Join-Path $AppRoot "runtime\node.exe"
 if (-not (Test-Path $node)) {
   $cmd = Get-Command node -ErrorAction SilentlyContinue
@@ -129,7 +131,42 @@ try {
   }
 } finally { Pop-Location }
 
-Step "5/5 Shortcuts"
+Step "5/6 Install launcher tabs (补丁 / 图片 / 生理)"
+$launcherDst = Join-Path $AppRoot "WhaleLauncher.exe"
+$wanted = "4.1.2"
+try { $wanted = (Get-Content (Join-Path (Split-Path -Parent $here) "launcher\version.txt") -Raw).Trim() } catch { }
+$marker = "$launcherDst.whale-libido-patch.installed"
+$backup = "$launcherDst.whale-libido-patch.bak"
+$oldMarker = ""
+if (Test-Path $marker) { $oldMarker = (Get-Content $marker -Raw).Trim() }
+try {
+  if (-not (Test-Path $backup)) { Copy-Item $launcherDst $backup -Force }
+  Get-ChildItem $launcherSrcDir -Recurse -File | Where-Object { $_.Name -ne "WhaleLauncher.exe" } | ForEach-Object {
+    $rel = $_.FullName.Substring($launcherSrcDir.Length).TrimStart('\')
+    $target = Join-Path $AppRoot $rel
+    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $target) | Out-Null
+    try { Copy-Item $_.FullName $target -Force } catch { }
+  }
+  $installed = $false
+  try {
+    Copy-Item (Join-Path $launcherSrcDir "WhaleLauncher.exe") $launcherDst -Force
+    $installed = $true
+  } catch {
+    try {
+      $old = $launcherDst + ".old-" + [DateTime]::Now.ToString("yyyyMMddHHmmss")
+      Move-Item $launcherDst $old -Force
+      Copy-Item (Join-Path $launcherSrcDir "WhaleLauncher.exe") $launcherDst -Force
+      $installed = $true
+      Info "old launcher renamed to $old"
+    } catch { Info "launcher exe replace failed (close WhaleGirl and rerun): $($_.Exception.Message)" }
+  }
+  if ($installed) {
+    [System.IO.File]::WriteAllText($marker, $wanted, (New-Object System.Text.UTF8Encoding($false)))
+    Info "launcher tabs installed (backup: WhaleLauncher.exe.whale-libido-patch.bak)"
+  }
+} catch { Info "launcher install failed: $($_.Exception.Message)" }
+
+Step "6/6 Shortcuts"
 $port = "8787"
 $portFile = Join-Path $AppRoot "data\server-port.txt"
 if (Test-Path $portFile) {
