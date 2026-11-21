@@ -53,9 +53,9 @@ test('配置只接受有限范围和事件列表', () => {
 });
 
 test('提示词包含状态但不要求播报数值', () => {
-  const data = engine.normalize({ value: 70, updatedAt: new Date().toISOString(), events: [], samples: [] });
+  const data = engine.normalize({ value: 75, updatedAt: new Date().toISOString(), events: [], samples: [] });
   const block = engine.promptBlock(engine.buildState(data));
-  assert.match(block, /70\/100/);
+  assert.match(block, /75\/100/);
   assert.match(block, /快撑不住/);
   assert.match(block, /成年/);
 });

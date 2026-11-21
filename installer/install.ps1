@@ -14,7 +14,7 @@ function Fail([string]$text) { Write-Host ("[ERROR] " + $text) -ForegroundColor 
 Write-Host ""
 Write-Host "WhaleGirl libido / physiology patch installer" -ForegroundColor Cyan
 Write-Host "  18+ only. This is a PATCH, not a standalone app." -ForegroundColor Yellow
-Write-Host "  Install WhaleGirl 4.1.2 first: https://github.com/Banan1cee/whale_girl"
+Write-Host "  Install WhaleGirl 4.1.7.1 first: https://github.com/Banan1cee/whale_girl"
 Write-Host ""
 
 function Find-AppRoot {
@@ -80,8 +80,8 @@ Info "target: $AppRoot"
 $version = ""
 try { $version = ([System.IO.File]::ReadAllText((Join-Path $AppRoot "package.json"), [System.Text.Encoding]::UTF8) | ConvertFrom-Json).version } catch { }
 Info "base version: $version"
-if ($version -and $version -ne "4.1.2") {
-  Write-Host "  [WARN] tested with 4.1.2; continuing anyway." -ForegroundColor Yellow
+if ($version -and $version -ne "4.1.7.1") {
+  Write-Host "  [WARN] tested with 4.1.7.1; continuing anyway." -ForegroundColor Yellow
 }
 
 Step "1/6 Check package"
@@ -133,7 +133,7 @@ try {
 
 Step "5/6 Install launcher tabs (补丁 / 图片 / 生理)"
 $launcherDst = Join-Path $AppRoot "WhaleLauncher.exe"
-$wanted = "4.1.2"
+$wanted = "4.1.7.1"
 try { $wanted = (Get-Content (Join-Path (Split-Path -Parent $here) "launcher\version.txt") -Raw).Trim() } catch { }
 $marker = "$launcherDst.whale-libido-patch.installed"
 $backup = "$launcherDst.whale-libido-patch.bak"
